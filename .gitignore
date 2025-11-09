@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+env/
+venv/
+*.sqlite3
+
+# Data & logs
+/data/*.csv
+!/data/sample_*.csv
+/outputs/*.csv
+
+# IDE & OS files
+.vscode/
+.DS_Store
+Thumbs.db
