@@ -1,5 +1,5 @@
+# app/auth.py
 from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 from .database import get_db
 from .models import User
+from .schemas import LoginRequest, LoginResponse   # <-- import schemas
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey123")
@@ -20,16 +21,6 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def preprocess_password(password: str) -> bytes:
     """Return raw SHA-256 digest (32 bytes)."""
     return hashlib.sha256(password.encode("utf-8")).digest()
-
-class LoginRequest(BaseModel):
-    email: str
-    password: str
-
-class LoginResponse(BaseModel):
-    user_id: str
-    access_token: str
-    token_type: str
-    role: str
 
 @router.post("/login", response_model=LoginResponse)
 def login(request: LoginRequest, db: Session = Depends(get_db)):
