@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 import os, hashlib
 from dotenv import load_dotenv
 
@@ -31,7 +31,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     if not pwd_context.verify(preprocess_password(request.password), user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    expire = datetime.utcnow() + timedelta(hours=TOKEN_EXPIRE_HOURS)
+    expire = datetime.now(UTC) + timedelta(hours=TOKEN_EXPIRE_HOURS)
     payload = {"sub": user.id, "role": user.role, "exp": int(expire.timestamp())}
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 

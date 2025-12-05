@@ -36,3 +36,24 @@ class EmployeeCompResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AccessApprovalRequest(BaseModel):
+    user_id: str        # requester’s ID (from JWT or passed explicitly)
+    route: str          # resource they want access to
+
+class ApproveAccessRequest(BaseModel):
+    approval_id: str    # ID of the pending approval request
+    hours: int = 1      # duration in hours (default 1)
+
+class AccessApprovalResponse(BaseModel):
+    id: str
+    user_id: str
+    route: str
+    approved_by: str | None   # nullable until approved
+    created_at: datetime
+    expires_at: datetime | None   # nullable until approved
+
+    class Config:
+        orm_mode = True
+
